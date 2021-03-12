@@ -1,0 +1,18 @@
+{
+   "extends": "rallycoding",
+   "rules": {
+      "arrow-body-style": 0,
+      "no-underscore-dangle": 0,
+      "radix": 0,
+      "eol-last": "off",
+      "no-unused-vars": "off",
+      "import/newline-after-import": "off",
+      "import/imports-first": "off",
+      "semi": "off",
+      "space-infix-ops": "off",
+      "object-curly-spacing": "off",
+      "object-shorthand": "off",
+      "quotes": "error",
+      "comma-spacing": "off"
+   }
+}

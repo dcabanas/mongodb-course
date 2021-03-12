@@ -1,0 +1,93 @@
+npm i --save mocha nodemon mongoose -> installs mocha (testing), nodemon (watcher) and mongoose
+"test": "nodemon --exec mocha -R min" -> to watch and automatically restart our tests; it can
+also be used insted of node to run scripts
+npm test -g nameoftest -> only runs the test with specified name described inside it(); 
+xit() skips the test; it.only() only runs that test
+use dbname (in MongoShell) -> to start using that DB
+npm i --save faker -> really useful to generate a ton of random test data for test purposes
+
+
+Theory:
+
+A Mongo instance can have multiple Databases; each Database can have multiple Collections and
+usually there is a Collection for each type of resource we want to store; each Collection
+stores data records as Documents
+
+when trying to connect to a MongoDB instance with Mongoose, the DB specified in the connection
+string is automatically created
+
+In Mongoose, Models hold the schema of our records; schemas tell the exact properties and
+their types our records will have
+
+Any time we run tests with CRUD operations we must empty the DB (drop the collections) so
+our tests run in isolation; a test hook is a function that runs before each of our tests
+
+Any operations/queries to our DB are async therefore they take a certain unknown amount of 
+time, when running our tests we need to tell Mocha that the test (DB operation) is completed, 
+with "done"
+
+Mongoose operations/queries to the DB, like "save", always return a Promise
+
+Since the _id property automatically assigned by Mongo to every record is not a String but an
+Object that encapsulates that String, for comparisons we need to do _id.toString()
+
+for each test we need to pass the arg "done"
+
+If we add new properties to our model schema, it doesnt mean that our tests will fail
+
+everytime we can avoid loading data from/to MongoDB is a big win in terms of performance, and
+we can do this with the MongoDB operators. With these operators we wont load any data from
+Mongo onto memory but perform the operations directly on Mongo; operators are extremely useful
+when we want to perform actions on many records at once
+
+There are two validation functions to verify the validation of our schema, validate (async)
+and validateSync (sync)
+
+What makes MongoDB (NoSQL) MongoDB is the fact we dont create a separate Model (table), instead
+we nest resources (records) to establish relations between them; different Schemas are still
+required
+
+When creating nested resources (subdocuments) the "save()" on the topmost resource performs a
+deep save on all nested sub-levels
+
+MongoDB doesnt use pure JS remove operations on arrays, instead we access the subdocument
+directly and call "remove()"; removing or adding subdocuments doesnt access the DB
+
+A virtual type is a Model property that doesnt get persisted/updated on MongoDB, they only
+live on Mongoose side; virtual types cant be defined as properties inside our schemas
+
+By using Refs, we dont use the nested subdocuments approach but we create different Collections
+emulating that way a relational DB
+
+In MongoDB we cant drop all collections at once, gotta be sequentially; collections name must
+be all lowercase
+
+then() and exec() are the same thing, when the query gets executed on the DB; queries can be
+enhanced by adding modifiers prior to then(), to load more data that we might want
+
+Mongoose doesnt allow to recursively load all the nested associations; we gotta use modifiers,
+for example "populate()" and pass an object (NOT RECOMMENDED)
+
+To eliminate all nested subdocuments when the document gets removed (Cascade constraint in SQL)
+we use Mongoose Middleware; all middleware in Mongoose must receive as an arg the "next"
+callback function
+
+skip and limit are two query modifiers to implement Pagination
+
+when using the sort query modifier, 1 means ascending order and -1 descending order
+
+When using Promisse.all we can use then() to grab the result and for each result returned
+by each promisse will be elements of the result array combined
+
+for queries involving text search, we first gotta create an Index on that Collection
+
+When we want to count the number of records returned from a Query using skip and limit, we can
+do the query with skip and limit and then the same query without skip and limit and do count(),
+or we can use aggregate with $facet
+
+
+
+
+
+
+
